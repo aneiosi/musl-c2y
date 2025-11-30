@@ -212,18 +212,6 @@ typedef struct _IO_cookie_io_functions_t {
 FILE *fopencookie(void *, const char *, cookie_io_functions_t);
 #endif
 
-#if defined(_LARGEFILE64_SOURCE)
-#define tmpfile64 tmpfile
-#define fopen64 fopen
-#define freopen64 freopen
-#define fseeko64 fseeko
-#define ftello64 ftello
-#define fgetpos64 fgetpos
-#define fsetpos64 fsetpos
-#define fpos64_t fpos_t
-#define off64_t off_t
-#endif
-
 #ifdef __cplusplus
 }
 #endif

@@ -18,13 +18,6 @@ typedef struct __fsid_t {
 int statfs (const char *, struct statfs *);
 int fstatfs (int, struct statfs *);
 
-#if defined(_LARGEFILE64_SOURCE)
-#define statfs64 statfs
-#define fstatfs64 fstatfs
-#define fsblkcnt64_t fsblkcnt_t
-#define fsfilcnt64_t fsfilcnt_t
-#endif
-
 #ifdef __cplusplus
 }
 #endif

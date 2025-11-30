@@ -198,16 +198,6 @@ ssize_t copy_file_range(int, off_t *, int, off_t *, size_t, unsigned);
 pid_t gettid(void);
 #endif
 
-#if defined(_LARGEFILE64_SOURCE)
-#define lseek64 lseek
-#define pread64 pread
-#define pwrite64 pwrite
-#define truncate64 truncate
-#define ftruncate64 ftruncate
-#define lockf64 lockf
-#define off64_t off_t
-#endif
-
 #define POSIX_CLOSE_RESTART     0
 
 #define _XOPEN_VERSION          700

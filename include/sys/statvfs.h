@@ -43,13 +43,6 @@ int fstatvfs (int, struct statvfs *);
 #define ST_NODIRATIME  2048
 #define ST_RELATIME    4096
 
-#if defined(_LARGEFILE64_SOURCE)
-#define statvfs64 statvfs
-#define fstatvfs64 fstatvfs
-#define fsblkcnt64_t fsblkcnt_t
-#define fsfilcnt64_t fsfilcnt_t
-#endif
-
 #ifdef __cplusplus
 }
 #endif

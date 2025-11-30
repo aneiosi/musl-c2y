@@ -95,16 +95,6 @@ int prlimit(pid_t, int, const struct rlimit *, struct rlimit *);
 
 #define RLIM_NLIMITS RLIMIT_NLIMITS
 
-#if defined(_LARGEFILE64_SOURCE)
-#define RLIM64_INFINITY RLIM_INFINITY
-#define RLIM64_SAVED_CUR RLIM_SAVED_CUR
-#define RLIM64_SAVED_MAX RLIM_SAVED_MAX
-#define getrlimit64 getrlimit
-#define setrlimit64 setrlimit
-#define rlimit64 rlimit
-#define rlim64_t rlim_t
-#endif
-
 #if _REDIR_TIME64
 __REDIR(getrusage, __getrusage_time64);
 #endif
