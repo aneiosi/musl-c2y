@@ -115,7 +115,7 @@ fi
 
 # Beginning of actual script
 
-CFLAGS_C99FSE=
+CFLAGS_C23FSE=
 CFLAGS_AUTO=
 CFLAGS_MEMOPS=
 CFLAGS_NOSSP=
@@ -239,7 +239,7 @@ CROSS_COMPILE="$target-"
 #
 printf "checking for C compiler... "
 trycc ${CROSS_COMPILE}gcc
-trycc ${CROSS_COMPILE}c99
+trycc ${CROSS_COMPILE}c23
 trycc ${CROSS_COMPILE}cc
 printf "%s\n" "$CC"
 test -n "$CC" || { echo "$0: cannot find a C compiler" ; exit 1 ; }
@@ -345,15 +345,15 @@ unknown) fail "$0: unable to detect target arch; try $0 --target=..." ;;
 esac
 
 #
-# Try to get a conforming C99 freestanding environment
+# Try to get a conforming C23 freestanding environment
 #
-tryflag CFLAGS_C99FSE -std=c99
-tryflag CFLAGS_C99FSE -nostdinc
-tryflag CFLAGS_C99FSE -ffreestanding \
-|| tryflag CFLAGS_C99FSE -fno-builtin
-tryflag CFLAGS_C99FSE -fexcess-precision=standard \
-|| { test "$ARCH" = i386 && tryflag CFLAGS_C99FSE -ffloat-store ; }
-tryflag CFLAGS_C99FSE -frounding-math
+tryflag CFLAGS_C23FSE -std=c23
+tryflag CFLAGS_C23FSE -nostdinc
+tryflag CFLAGS_C23FSE -ffreestanding \
+|| tryflag CFLAGS_C23FSE -fno-builtin
+tryflag CFLAGS_C23FSE -fexcess-precision=standard \
+|| { test "$ARCH" = i386 && tryflag CFLAGS_C23FSE -ffloat-store ; }
+tryflag CFLAGS_C23FSE -frounding-math
 
 #
 # Semantically we want to insist that our sources follow the
@@ -361,7 +361,7 @@ tryflag CFLAGS_C99FSE -frounding-math
 # compilers are known or suspected to have critical bugs in their
 # type-based aliasing analysis. See for example GCC bug 107107.
 #
-tryflag CFLAGS_C99FSE -fno-strict-aliasing
+tryflag CFLAGS_C23FSE -fno-strict-aliasing
 
 #
 # We may use the may_alias attribute if __GNUC__ is defined, so
@@ -376,12 +376,12 @@ __attribute__((__may_alias__))
 #endif
 x;
 EOF
-if $CC $CFLAGS_C99FSE $CPPFLAGS $CFLAGS \
+if $CC $CFLAGS_C23FSE $CPPFLAGS $CFLAGS \
   -c -o /dev/null "$tmpc" >/dev/null 2>&1 ; then
 printf "no\n"
 else
 printf "yes\n"
-CFLAGS_C99FSE="$CFLAGS_C99FSE -D__may_alias__="
+CFLAGS_C23FSE="$CFLAGS_C23FSE -D__may_alias__="
 fi
 
 #
@@ -389,7 +389,7 @@ fi
 # executable stack, potentially exposing vulnerabilities in programs
 # linked with such object files. Fix this.
 #
-tryflag CFLAGS_C99FSE -Wa,--noexecstack
+tryflag CFLAGS_C23FSE -Wa,--noexecstack
 
 #
 # Check for options to disable stack protector, which needs to be
@@ -577,7 +577,7 @@ fi
 # Determine if the compiler produces position-independent code (PIC)
 # by default. If so, we don't need to compile separate object files
 # for libc.a and libc.so.
-if trycppif __PIC__ "$CFLAGS_C99FSE $CPPFLAGS $CFLAGS" ; then
+if trycppif __PIC__ "$CFLAGS_C23FSE $CPPFLAGS $CFLAGS" ; then
 pic_default=yes
 else
 pic_default=no
@@ -625,14 +625,14 @@ printf "using compiler runtime libraries: %s\n" "$LIBCC"
 
 # Figure out arch variants for archs with variants
 SUBARCH=
-t="$CFLAGS_C99FSE $CPPFLAGS $CFLAGS"
+t="$CFLAGS_C23FSE $CPPFLAGS $CFLAGS"
 
 if test "$ARCH" = "i386" ; then
 printf "checking whether compiler can use ebx in PIC asm constraints... "
 cat > "$tmpc" <<EOF
 int foo(int x) { __asm__ ( "" : "+b"(x) ); return x; }
 EOF
-if $CC $CFLAGS_C99FSE $CPPFLAGS $CFLAGS -fPIC \
+if $CC $CFLAGS_C23FSE $CPPFLAGS $CFLAGS -fPIC \
   -c -o /dev/null "$tmpc" >/dev/null 2>&1 ; then
 printf "yes\n"
 else
@@ -659,7 +659,7 @@ trycppif __ARM_PCS_VFP "$t" && SUBARCH=${SUBARCH}hf
 if test "$cc_family" = clang ; then
 printf "checking whether clang's vfp asm constraints work... "
 echo 'float f(float x) { __asm__("":"+t"(x)); return x; }' > "$tmpc"
-if $CC $CFLAGS_C99FSE $CPPFLAGS $CFLAGS -c -o /dev/null "$tmpc" >/dev/null 2>&1 ; then
+if $CC $CFLAGS_C23FSE $CPPFLAGS $CFLAGS -c -o /dev/null "$tmpc" >/dev/null 2>&1 ; then
 printf "yes\n"
 else
 printf "no\n"
@@ -710,7 +710,7 @@ if test "$ARCH" = "powerpc" ; then
 trycppif "_SOFT_FLOAT || __NO_FPRS__" "$t" && SUBARCH=${SUBARCH}-sf
 printf "checking whether compiler can use 'd' constraint in asm... "
 echo 'double f(double x) { __asm__ ("fabs %0, %1" : "=d"(x) : "d"(x)); return x; }' > "$tmpc"
-if $CC $CFLAGS_C99FSE $CPPFLAGS $CFLAGS -c -o /dev/null "$tmpc" >/dev/null 2>&1 ; then
+if $CC $CFLAGS_C23FSE $CPPFLAGS $CFLAGS -c -o /dev/null "$tmpc" >/dev/null 2>&1 ; then
 printf "yes\n"
 else
 printf "no\n"
@@ -742,7 +742,7 @@ if trycppif "__SH_FPU_ANY__ || __SH4__" "$t" ; then
 # supports single precision. Reject them.
 printf "checking whether compiler's double type is IEEE double... "
 echo 'typedef char dblcheck[(int)sizeof(double)-5];' > "$tmpc"
-if $CC $CFLAGS_C99FSE $CPPFLAGS $CFLAGS -c -o /dev/null "$tmpc" >/dev/null 2>&1 ; then
+if $CC $CFLAGS_C23FSE $CPPFLAGS $CFLAGS -c -o /dev/null "$tmpc" >/dev/null 2>&1 ; then
 printf "yes\n"
 else
 printf "no\n"
@@ -771,7 +771,7 @@ printf "checking whether compiler's long double definition matches float.h... "
 echo '#include <float.h>' > "$tmpc"
 echo '#define C(m,s) (m==LDBL_MANT_DIG && s==sizeof(long double))' >> "$tmpc"
 echo 'typedef char ldcheck[(C(53,8)||C(64,12)||C(64,16)||C(113,16))*2-1];' >> "$tmpc"
-if $CC $CFLAGS_C99FSE \
+if $CC $CFLAGS_C23FSE \
   -I$srcdir/arch/$ARCH -I$srcdir/arch/generic -I$srcdir/include \
   $CPPFLAGS $CFLAGS -c -o /dev/null "$tmpc" >/dev/null 2>&1 ; then
 printf "yes\n"
@@ -786,7 +786,7 @@ fi
 # early rather than producing a seriously-broken math library.
 #
 if trycppif "__FAST_MATH__" \
-  "$CFLAGS_C99FSE $CPPFLAGS $CFLAGS" ; then
+  "$CFLAGS_C23FSE $CPPFLAGS $CFLAGS" ; then
 fail "$0: error: compiler has broken floating point; check CFLAGS"
 fi
 
@@ -817,7 +817,7 @@ syslibdir = $syslibdir
 CC = $CC
 CFLAGS = $CFLAGS
 CFLAGS_AUTO = $CFLAGS_AUTO
-CFLAGS_C99FSE = $CFLAGS_C99FSE
+CFLAGS_C23FSE = $CFLAGS_C23FSE
 CFLAGS_MEMOPS = $CFLAGS_MEMOPS
 CFLAGS_NOSSP = $CFLAGS_NOSSP
 CPPFLAGS = $CPPFLAGS

@@ -17,7 +17,7 @@ Build Prerequisites
 -------------------
 
 The only build-time prerequisites for musl are GNU Make and a
-freestanding C99 compiler toolchain targeting the desired instruction
+freestanding C23 compiler toolchain targeting the desired instruction
 set architecture and ABI, with support for a minimal subset of "GNU C"
 extensions consisting mainly of gcc-style inline assembly, weak
 aliases, hidden visibility, and stand-alone assembly source files.

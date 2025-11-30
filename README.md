@@ -11,7 +11,7 @@ safety. musl is built on the principle that these goals are best
 achieved through simple code that is easy to understand and maintain.
 
 The 1.1 release series for musl features coverage for all interfaces
-defined in ISO C99 and POSIX 2008 base, along with a number of
+defined in ISO C23 and POSIX 2008 base, along with a number of
 non-standardized interfaces for compatibility with Linux, BSD, and
 glibc functionality.
 
